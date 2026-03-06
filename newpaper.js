@@ -15,18 +15,24 @@ let obj = {};
 if(typeof $response == "undefined") {
   delete $request.headers["x-revenuecat-etag"];
   delete $request.headers["X-RevenueCat-ETag"];
+  delete $request.headers["If-None-Match"];
   obj.headers = $request.headers;
 }else {
   let body = JSON.parse(typeof $response != "undefined" && $response.body || null);
   if(body && body.subscriber) {
     const name = "pro";
-    const appid = "com.fiftythree.paper.pro_12";
+    const appid = "com.fiftythree.paper.pro";
     let data = {
       "expires_date": "2999-01-01T00:00:00Z",
-      "original_purchase_date":  "2021-01-01T00:00:00Z",
+      "original_purchase_date": "2021-01-01T00:00:00Z",
       "purchase_date": "2021-01-01T00:00:00Z",
       "ownership_type": "PURCHASED",
-      "store": "app_store"
+      "store": "app_store",
+      "period_type": "normal",
+      "store_transaction_id": "490001314520000",
+      "is_sandbox": false,
+      "billing_issues_detected_at": null,
+      "unsubscribe_detected_at": null
     };
     let subscriber = body.subscriber;
     subscriber.subscriptions[(appid)] = data;
