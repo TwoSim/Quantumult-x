@@ -12,16 +12,23 @@ hostname = api.revenuecat.com
 
 let obj = {};
 
-if(typeof $response == "undefined") {
+if (typeof $response == "undefined") {
+
   delete $request.headers["x-revenuecat-etag"];
   delete $request.headers["X-RevenueCat-ETag"];
   delete $request.headers["If-None-Match"];
+
   obj.headers = $request.headers;
-}else {
-  let body = JSON.parse(typeof $response != "undefined" && $response.body || null);
-  if(body && body.subscriber) {
+
+} else {
+
+  let body = JSON.parse($response.body);
+
+  if (body && body.subscriber) {
+
     const name = "pro";
     const appid = "com.fiftythree.paper.pro";
+
     let data = {
       "expires_date": "2999-01-01T00:00:00Z",
       "original_purchase_date": "2021-01-01T00:00:00Z",
@@ -30,16 +37,18 @@ if(typeof $response == "undefined") {
       "store": "app_store",
       "period_type": "normal",
       "store_transaction_id": "490001314520000",
-      "is_sandbox": false,
-      "billing_issues_detected_at": null,
-      "unsubscribe_detected_at": null
+      "is_sandbox": false
     };
+
     let subscriber = body.subscriber;
-    subscriber.subscriptions[(appid)] = data;
-    subscriber.entitlements[(name)] = JSON.parse(JSON.stringify(data));
-    subscriber.entitlements[(name)].product_identifier = (appid);   
+
+    subscriber.subscriptions[appid] = data;
+
+    subscriber.entitlements[name] = JSON.parse(JSON.stringify(data));
+    subscriber.entitlements[name].product_identifier = appid;
+
     obj.body = JSON.stringify(body);
-  } 
+  }
 }
 
 $done(obj);
